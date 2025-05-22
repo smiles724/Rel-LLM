@@ -1,0 +1,112 @@
+### rel-attendance
+```markdown
+# user-event (reg)
+python main.py --dataset=rel-event --task=user-attendance --batch_size=2 --lr=0.0001  --llm_frozen --context --context_table=event_attendees
+
+# user-ignore (cls)
+## GNN
+python main.py --dataset=rel-event --task=user-ignore -model_type=gnn --batch_size=512 --lr=0.005 --wd=0.15--dropout=0.45
+## LLM
+python main.py --dataset=rel-event --task=user-ignore --epochs=3 --batch_size=2 --lr=0.0001 --dropout=0.2 --llm_frozen --context --context_table=event_attendees
+
+# user-repeat (cls)
+python main.py  --dataset=rel-event --task=user-repeat --epochs=10 --batch_size=2 --lr=0.0001 --dropout=0.2 --llm_frozen
+```
+You can add `--debug ` to turn off `wandb` without recording the training process.
+
+### rel-amazon ['customer', 'review', 'product']
+```markdown
+# user-churn (cls)
+python main.py  --dataset=rel-amazon --task=user-churn --epochs=20 --batch_size=128 --val_size=256 --lr=0.001 --wd=0.0015 --dropout=0.4 --val_steps=1000 --temporal_strategy=last --text_embedder=mpnet --llm_frozen --loss_class_weight 0.6 0.4 --debug
+
+# item-churn (cls)
+python main.py  --dataset=rel-amazon --task=item-churn --epochs=20 --batch_size=128 --val_size=256 --lr=0.001 --wd=0.0015 --dropout=0.4 --val_steps=1000 --temporal_strategy=last --text_embedder=mpnet --llm_frozen --loss_class_weight 0.6 0.4 --debug
+
+# user-ltv (reg) `output is a float number`
+## w.o context
+python main.py  --dataset=rel-amazon --task=user-ltv --epochs=20 --batch_size=128 --val_size=256 --lr=0.001 --wd=0.0015 --dropout=0.4 --val_steps=1000 --temporal_strategy=last --text_embedder=mpnet --llm_frozen --max_new_tokens=3
+# with context
+python main.py  --dataset=rel-amazon --task=user-ltv --epochs=10 --batch_size=1 --val_size=1 --lr=0.0001 --wd=0.0015 --dropout=0.2 --val_steps=100000 --temporal_strategy=last --max_new_tokens=3 --context --debug
+
+# item-ltv (reg) `output is a float number`
+## GNN
+python main.py --dataset=rel-amazon --task=item-ltv --model_type=gnn --batch_size=512 --val_size=512 --lr=0.005 --wd=0.0015 --dropout=0.2 --val_steps=200 --temporal_strategy=last --text_embedder=mpnet --debug
+## LLM
+### w.o context
+python main.py  --dataset=rel-amazon --task=item-ltv --epochs=20 --batch_size=128 --val_size=256 --lr=0.001 --dropout=0.4 --wd=0.0015 --val_steps=2000 --temporal_strategy=last --llm_frozen --max_new_tokens=3 --debug
+### with context OOD for `context_table=review`
+python main.py  --dataset=rel-amazon --task=item-ltv --epochs=20 --batch_size=1 --val_size=1 --lr=0.0001  --wd=0.0015 --dropout=0.2 --val_steps=100000 --temporal_strategy=last --max_new_tokens=3 --context --debug
+
+```
+
+### rel-stack
+```markdown
+# user-engagement (cls)
+## GNN
+python main.py --dataset=rel-stack --task=user-engagement --model_type=gnn --batch_size=512 --lr=0.005 --wd=0.15 --dropout=0.45 --val_steps=200
+## LLM
+python main.py  --dataset=rel-stack --task=user-engagement --epochs=10 --batch_size=256 --val_size=256 --lr=0.005 --wd=0.0015 --dropout=0.4 --val_steps=200 --temporal_strategy=last --text_embedder=mpnet --loss_class_weight 0.2 0.8
+
+# user-badge (cls)
+python main.py  --dataset=rel-stack --task=user-badge --epochs=10 --batch_size=256 --val_size=256 --lr=0.005 --wd=0.0015 --dropout=0.25 --val_steps=1000 --temporal_strategy=last --text_embedder=mpnet --loss_class_weight 0.15 0.85
+
+# post-votes (reg)
+python main.py  --dataset=rel-stack --task=post-votes --epochs=10 --batch_size=256 --val_size=256 --lr=0.001 --dropout=0.4 --val_steps=200
+```
+
+### rel-avito
+```markdown
+# user-visits (cls)
+python main.py  --dataset=rel-avito --task=user-visits --epochs=50 --batch_size=256 --val_size=256 --lr=0.001 --wd=0.0015 --dropout=0.4 --val_steps=200 --temporal_strategy=last --text_embedder=mpnet --loss_class_weight 0.8 0.2   # TODO: 0.9 0.1
+
+# user-clicks (cls)
+python main.py  --dataset=rel-avito --task=user-clicks --epochs=50 --batch_size=256 --val_size=256 --lr=0.001 --wd=0.0015 --dropout=0.4 --val_steps=200 --temporal_strategy=last --loss_class_weight 0.15 0.85 --text_embedder=mpnet --debug
+
+# ad-ctr (reg)
+python main.py  --dataset=rel-avito --task=ad-ctr --epochs=20 --batch_size=256 --val_size=128 --lr=0.001 --wd=0.0015 --dropout=0.4 --val_steps=20 --temporal_strategy=last --llm_frozen --max_new_tokens=3
+
+```
+
+### rel-f1
+```markdown
+# driver-position (reg)  `use uniform temporal strategy!`
+## GNN
+python main.py --dataset=rel-f1 --task=driver-position --model_type=gnn --epochs=50 --batch_size=512 --lr=0.0005 --wd=0.0015 --dropout=0.15 --val_steps=20
+## LLM  `max_new_tokens=4 for float output`
+### w.o context
+python main.py  --dataset=rel-f1 --task=driver-position --epochs=30 --batch_size=256 --val_size=256 --lr=0.0001 --wd=0.015 --dropout=0.45 --val_steps=20 --text_embedder=mpnet --llm_frozen --output_mlp --max_new_tokens=1
+#### with MLP
+python main.py  --dataset=rel-f1 --task=driver-position --epochs=30 --batch_size=256 --val_size=256 --lr=0.0005 --wd=0.015 --dropout=0.45 --val_steps=20 --text_embedder=mpnet --max_new_tokens=1
+
+
+### with context
+python main.py  --dataset=rel-f1 --task=driver-position --epochs=30 --batch_size=1 --val_size=1 --lr=0.0001 --wd=0.015 --dropout=0.45 --val_steps=1000 --text_embedder=mpnet --max_new_tokens=4 --context --context_table=results
+
+# driver-dnf (cls)
+python main.py  --dataset=rel-f1 --task=driver-dnf --epochs=50 --batch_size=256 --val_size=256 --lr=0.0001 --dropout=0.1 --val_steps=20  --text_embedder=mpnet  --loss_class_weight 0.8 0.2 --debug
+
+# driver-top3 (cls)
+
+```
+
+### rel-hm
+```markdown
+# item-sales (reg)
+python main.py  --dataset=rel-hm --task=item-sales --epochs=20 --batch_size=256 --val_size=256 --lr=0.0001 --wd=0.0015 --dropout=0.15 --val_steps=1000 --temporal_strategy=last --text_embedder=mpnet --output_mlp --max_new_tokens=1
+
+# user-churn (cls)
+
+```
+
+### rel-trial
+```markdown
+# study-adverse (reg)
+python main.py  --dataset=rel-trial --task=study-adverse --epochs=20 --batch_size=256 --val_size=256 --lr=0.0001 --wd=0.0015 --dropout=0.15 --val_steps=1000 --temporal_strategy=last --llm_frozen --text_embedder=mpnet --output_mlp --max_new_tokens=1
+
+# site-success (reg)
+python main.py  --dataset=rel-trial --task=site-success --epochs=20 --batch_size=256 --val_size=256 --lr=0.0001 --wd=0.0015 --dropout=0.15 --val_steps=1000 --temporal_strategy=last --llm_frozen --text_embedder=mpnet --output_mlp --max_new_tokens=1
+
+# study-outcome (cls)
+python main.py  --dataset=rel-trial --task=study-outcome --epochs=50 --batch_size=256 --val_size=256 --lr=0.0001 --dropout=0.1 --val_steps=20  --text_embedder=mpnet  --loss_class_weight 0.8 0.2 --debug
+
+```
