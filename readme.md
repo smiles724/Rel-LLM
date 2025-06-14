@@ -115,11 +115,11 @@ Rel-LLM significantly outperforms traditional baselines and in-context learning 
 
 Please cite our work if you find it useful:
 
-    @article{rel-llm2025,
-      title={Large Language Models are Good Relational Learners},
-      author={Fang Wu, Vijay Prakash Dwivedi, Jure Leskovec, },
-      journal={ACL},
-      year={2025}
+    @article{wu2025large,
+    title={Large Language Models are Good Relational Learners},
+    author={Wu, Fang and Dwivedi, Vijay Prakash and Leskovec, Jure},
+    journal={arXiv preprint arXiv:2506.05725},
+    year={2025}
     }
 
 And also cite RelBench:
