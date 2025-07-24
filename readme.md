@@ -67,13 +67,13 @@ Here, `Llama-3.1` is leveraged. Please log in to Huggingface for downloading the
 
 ```bash
 python main.py --dataset=rel-event --task=user-ignore --epochs=3 --batch_size=2 \
-  --lr=0.0001 --dropout=0.2 --llm_frozen --context --context_table=event_attendees
+  --lr=0.0001 --dropout=0.2 --llm_frozen 
 ```
 
 **rel-amazon** (regression):
 ```bash
 python main.py --dataset=rel-amazon --task=user-ltv --epochs=10 --batch_size=1 \
-  --lr=0.0001 --dropout=0.2 --context --temporal_strategy=last \
+  --lr=0.0001 --dropout=0.2 --temporal_strategy=last \
   --max_new_tokens=3 --text_embedder=mpnet
 ```
 
