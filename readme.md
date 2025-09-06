@@ -38,7 +38,8 @@ This repository supports our ACL 2025 paper:
 
 Install dependencies at once:
 ```bash
-pip install -r requirements.txt
+conda env create -f environment.yml
+conda activate llm 
 ```
 
 Alternatively, manually install packages in turn:
