@@ -220,7 +220,8 @@ if __name__ == '__main__':
     #############################################
     steps = 0
     if not args.debug:
-        run.finish()
+        if args.pretrain:
+            run.finish()
         run = wandb.init(project='rel-LLM', name=f'{args.dataset}_{args.task}', id="finetune_run_{args.dataset}_{args.task}", resume="allow")
     if state_dict is not None: model.load_state_dict(state_dict)  # load pretrained weights
     best_val_metric = -math.inf if higher_is_better else math.inf
